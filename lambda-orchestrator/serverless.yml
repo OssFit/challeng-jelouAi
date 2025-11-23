@@ -6,8 +6,8 @@ provider:
   runtime: nodejs22.x 
   region: us-east-1
   environment:
-    CUSTOMERS_API_URL: http://localhost:3001
-    ORDERS_API_URL: http://localhost:3002
+    CUSTOMERS_API_URL: http://18.222.199.50:3001
+    ORDERS_API_URL: http://18.222.199.50:3002
     SERVICE_TOKEN: token_interno_para_microservicios_123
 plugins:
   - serverless-offline
