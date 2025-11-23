@@ -47,3 +47,7 @@ out/
 coverage/
 bower_components/
 public/
+
+.serverless
+.serverless_plugins
+*.zip

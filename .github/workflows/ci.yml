@@ -1,0 +1,46 @@
+name: Challenge CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+
+    - name: Install & Test Customers API
+      run: |
+        cd customers-api
+        npm ci
+        npm test
+
+    - name: Install & Test Orders API
+      run: |
+        cd orders-api
+        npm ci
+        npm test
+
+    - name: Coveralls Orders API
+      if: success()
+      continue-on-error: true
+      run: |
+        cd orders-api
+        npm install coveralls
+        cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}

@@ -1,19 +1,23 @@
 service: challenge-orchestrator
 frameworkVersion: '3'
+useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs22.x 
+  runtime: nodejs22.x
   region: us-east-1
   environment:
-    CUSTOMERS_API_URL: http://18.222.199.50:3001
-    ORDERS_API_URL: http://18.222.199.50:3002
-    SERVICE_TOKEN: token_interno_para_microservicios_123
+    CUSTOMERS_API_URL: ${env:CUSTOMERS_API_URL}
+    ORDERS_API_URL: ${env:ORDERS_API_URL}
+    SERVICE_TOKEN: ${env:SERVICE_TOKEN}
 plugins:
   - serverless-offline
+  - serverless-dotenv-plugin
 custom:
   serverless-offline:
-    noPrependStageInUrl: true
+   noPrependStageInUrl: true
+   httpPort: 3000
+   lambdaPort: 3004
 
 functions:
   createAndConfirmOrder:
