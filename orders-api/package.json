@@ -1,0 +1,45 @@
+{
+  "name": "orders-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+        "src/services/**/*.js",
+        "src/controllers/**/*.js",
+        "src/repositories/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+        "/node_modules/",
+        "/src/scripts/",
+        "/src/config/"
+    ]
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mysql2": "^3.15.3",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "coveralls": "^3.1.1",
+    "jest": "^30.2.0"
+  }
+}

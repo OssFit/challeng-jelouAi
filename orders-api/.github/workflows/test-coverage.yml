@@ -1,0 +1,35 @@
+name: CI/CD & Coverage
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-orders-api:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install Dependencies (Orders API)
+      working-directory: ./orders-api
+      run: npm ci
+
+    - name: Run Tests with Coverage
+      working-directory: ./orders-api
+      run: npm run test:coverage
+
+    - name: Upload to Coveralls
+      uses: coverallsapp/github-action@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        base-path: ./orders-api
+        file: ./orders-api/coverage/lcov.info

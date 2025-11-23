@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  title: Orders API
+  description: API transaccional de gestión de pedidos y stock.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3002
+    description: Servidor Local
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        sku:
+          type: string
+        name:
+          type: string
+        price_cents:
+          type: integer
+        stock:
+          type: integer
+    
+    OrderInput:
+      type: object
+      required:
+        - customer_id
+        - items
+      properties:
+        customer_id:
+          type: integer
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id: 
+                type: integer
+                example: 1
+              qty: 
+                type: integer
+                example: 2
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+          enum: [CREATED, CONFIRMED, CANCELED]
+        total_cents:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id:
+                type: integer
+              qty:
+                type: integer
+
+paths:
+  /products:
+    post:
+      summary: Crear producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Producto creado
+    get:
+      summary: Listar productos (Cursor Pagination)
+      parameters:
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: cursor
+          schema: { type: integer }
+        - in: query
+          name: limit
+          schema: { type: integer, default: 10 }
+      responses:
+        '200':
+          description: Lista de productos
+
+  /products/{id}:
+    get:
+      summary: Obtener producto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Detalle producto
+    patch:
+      summary: Actualizar stock/precio
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Actualizado
+
+  /orders:
+    post:
+      summary: Crear Orden
+      description: Valida cliente externamente, descuenta stock y crea orden.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+      responses:
+        '201':
+          description: Orden Creada (CREATED)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /orders/{id}:
+    get:
+      summary: Obtener Orden
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Detalle de orden e items
+
+  /orders/{id}/confirm:
+    post:
+      summary: Confirmar Orden (Idempotente)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+        - in: header
+          name: X-Idempotency-Key
+          required: true
+          schema: { type: string }
+          description: Clave única para evitar duplicados (Ej. UUID)
+      responses:
+        '200':
+          description: Orden Confirmada (CONFIRMED)
+        '400':
+          description: Error de estado o falta header
+        '409':
+          description: Request en progreso
+
+  /orders/{id}/cancel:
+    post:
+      summary: Cancelar Orden
+      description: Restaura el stock. Solo permitido si está CREATED o si es CONFIRMED hace menos de 10 min.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Orden Cancelada y Stock Restaurado
+        '403':
+          description: Tiempo límite de cancelación excedido

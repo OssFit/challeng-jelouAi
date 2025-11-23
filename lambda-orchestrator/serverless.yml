@@ -1,0 +1,25 @@
+service: challenge-orchestrator
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs22.x 
+  region: us-east-1
+  environment:
+    CUSTOMERS_API_URL: http://localhost:3001
+    ORDERS_API_URL: http://localhost:3002
+    SERVICE_TOKEN: token_interno_para_microservicios_123
+plugins:
+  - serverless-offline
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+
+functions:
+  createAndConfirmOrder:
+    handler: src/handler.createAndConfirmOrder
+    events:
+      - http:
+          path: orchestrator/create-and-confirm-order
+          method: post
+          cors: true
