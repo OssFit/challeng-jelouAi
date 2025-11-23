@@ -1,19 +1,21 @@
+const jwt = require('jsonwebtoken');
 const config = require('../config/envs');
 
 const verifyServiceToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    
-    if (!authHeader) {
-        return res.status(401).json({ error: 'Authorization header missing' });
-    }
+
+    if (!authHeader) return res.status(401).json({ error: 'Missing Authorization Header' });
 
     const token = authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Invalid Token Format' });
 
-    if (token !== config.SERVICE_TOKEN) {
-        return res.status(403).json({ error: 'Invalid Service Token' });
+    try {
+        const decoded = jwt.verify(token, config.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return res.status(403).json({ error: 'Forbidden: Invalid or Expired JWT' });
     }
-
-    next();
 };
 
 module.exports = { verifyServiceToken };

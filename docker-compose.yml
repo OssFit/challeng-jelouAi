@@ -36,7 +36,7 @@ services:
       DB_USER: user
       DB_PASSWORD: password
       DB_NAME: challenge_db
-      SERVICE_TOKEN: token_interno_para_microservicios_123
+      JWT_SECRET: ESTE_ES_EL_SECRETO_MAESTRO_2025
     volumes:
       - ./db:/db
     networks:
@@ -61,7 +61,7 @@ services:
       DB_PASSWORD: password
       DB_NAME: challenge_db
       CUSTOMERS_API_URL: http://customers-api:3001/internal/customers
-      SERVICE_TOKEN: token_interno_para_microservicios_123
+      SERVICE_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoib3JjaGVzdHJhdG9yIiwic2VydmljZSI6ImxhbWJkYSIsImlhdCI6MTc2MzkzODU3MiwiZXhwIjoxNzk1NDc0NTcyfQ.53lBMr43hhddJH6hqlWhVP5M8jo3hynu8v-nGq90B2I
     volumes:
       - ./db:/db
     networks:

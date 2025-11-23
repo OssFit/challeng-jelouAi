@@ -9,7 +9,8 @@ const envSchema = z.object({
     DB_NAME: z.string({ required_error: "DB_NAME is required" }),
     DB_PORT: z.string().default('3306').transform(Number),
     JWT_SECRET: z.string({ required_error: "JWT_SECRET is required" }),
-    SERVICE_TOKEN: z.string({ required_error: "SERVICE_TOKEN is required" })
+    SERVICE_TOKEN: z.string({ required_error: "SERVICE_TOKEN is required" }),
+    JWT_SECRET: z.string({ required_error: "JWT_SECRET is required for auth verification" })
 });
 
 const envServer = envSchema.safeParse(process.env);
