@@ -33,8 +33,8 @@ jobs:
       run: |
         cd orders-api
         npm ci
-        npm test
-
+        npm run test:coverage
+        
     - name: Coveralls Orders API
       if: success()
       continue-on-error: true
