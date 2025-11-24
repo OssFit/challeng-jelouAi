@@ -40,6 +40,25 @@ class OrderService {
         });
     }
 
+    async listOrders({ status, from, to, limit, cursor }) {
+        const limitParsed = parseInt(limit) || 10;
+        
+        const orders = await this.repository.findAll({ 
+            status, from, to, cursor, limit: limitParsed 
+        });
+
+        let nextCursor = null;
+        if (orders.length > 0) {
+            nextCursor = orders[orders.length - 1].id;
+            if (orders.length < limitParsed) nextCursor = null;
+        }
+
+        return {
+            data: orders,
+            meta: { nextCursor, limit: limitParsed }
+        };
+    }
+
     async getOrder(id) {
         const order = await this.repository.findById(id);
         if (!order) throw new Error('ORDER_NOT_FOUND');

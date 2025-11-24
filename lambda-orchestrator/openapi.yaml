@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: Lambda Orchestrator BFF
+  description: Punto de entrada único para la creación y confirmación de pedidos.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/dev
+    description: Local Offline
+  - url: https://{api_id}.execute-api.us-east-1.amazonaws.com/prod
+    description: AWS Production
+paths:
+  /orchestrator/create-and-confirm-order:
+    post:
+      summary: Crear y Confirmar Pedido
+      description: Orquesta la validación del cliente, creación de orden y confirmación transaccional.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [customer_id, items, idempotency_key]
+              properties:
+                customer_id:
+                  type: integer
+                  example: 1
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product_id: { type: integer }
+                      qty: { type: integer }
+                idempotency_key:
+                  type: string
+                  example: "UUID-V4-UNIQUE"
+                correlation_id:
+                  type: string
+                  description: ID de rastreo opcional
+      responses:
+        '201':
+          description: Pedido procesado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      customer: { type: object }
+                      order: { type: object }
+        '400':
+          description: Error de validación
+        '502':
+          description: Error de comunicación con microservicios

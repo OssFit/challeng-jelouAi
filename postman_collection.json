@@ -1,0 +1,58 @@
+{
+	"info": {
+		"name": "Challenge JelouAI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Orchestrator - Create & Confirm",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"customer_id\": 1,\n    \"items\": [{ \"product_id\": 1, \"qty\": 1 }],\n    \"idempotency_key\": \"{{$guid}}\",\n    \"correlation_id\": \"REQ-{{$timestamp}}\"\n}",
+					"options": {
+						"raw": { "language": "json" }
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/orchestrator/create-and-confirm-order",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "3000",
+					"path": ["orchestrator", "create-and-confirm-order"]
+				}
+			}
+		},
+		{
+			"name": "2. Customers - Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test Client\",\n    \"email\": \"test{{$randomInt}}@mail.com\",\n    \"phone\": \"+12345678\"\n}",
+					"options": { "raw": { "language": "json" } }
+				},
+				"url": "http://localhost:3001/customers"
+			}
+		},
+		{
+			"name": "3. Customers - List (Cursor)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3001/customers?limit=5"
+			}
+		},
+		{
+			"name": "4. Orders - List with Filters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3002/orders?status=CONFIRMED&limit=5"
+			}
+		}
+	]
+}

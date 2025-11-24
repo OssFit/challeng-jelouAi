@@ -5,6 +5,42 @@ class OrderRepository {
         this.db = database;
     }
 
+    async findAll({ status, from, to, limit, cursor }) {
+        let query = 'SELECT * FROM orders';
+        let params = [];
+        let conditions = [];
+
+        if (status) {
+            conditions.push('status = ?');
+            params.push(status);
+        }
+
+        if (from) {
+            conditions.push('created_at >= ?');
+            params.push(new Date(from));
+        }
+
+        if (to) {
+            conditions.push('created_at <= ?');
+            params.push(new Date(to));
+        }
+
+        if (cursor) {
+            conditions.push('id > ?');
+            params.push(parseInt(cursor));
+        }
+
+        if (conditions.length > 0) {
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        query += ' ORDER BY id ASC LIMIT ?';
+        params.push(parseInt(limit));
+
+        const [rows] = await this.db.query(query, params);
+        return rows;
+    }
+
     async createOrderWithTransaction({ customer_id, total_cents, items }) {
         const connection = await this.db.getConnection();
         

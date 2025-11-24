@@ -25,6 +25,16 @@ class OrderController {
         }
     };
 
+    list = async (req, res) => {
+        try {
+            const { status, from, to, cursor, limit } = req.query;
+            const result = await this.service.listOrders({ status, from, to, cursor, limit });
+            res.json(result);
+        } catch (error) {
+            this.handleError(res, error);
+        }
+    };
+
     getOne = async (req, res) => {
         try {
             const { id } = req.params;
