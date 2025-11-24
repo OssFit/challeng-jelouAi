@@ -14,7 +14,7 @@ A production-ready distributed system implementing a B2B order management platfo
 
 | Service | Endpoint | Description |
 |---------|----------|-------------|
-| **Lambda Orchestrator** | `https://3pmdcfqa56.execute-api.us-east-1.amazonaws.com/prod` | BFF Layer - Order orchestration |
+| **Lambda Orchestrator (AWS Lambda)** | `https://3pmdcfqa56.execute-api.us-east-1.amazonaws.com/prod/orchestrator/create-and-confirm-order` | BFF Layer - Serverless orchestration (*Requires POST Body*) |
 | **Customers API** | `http://18.222.199.50:3001/health` | Customer management service |
 | **Orders API** | `http://18.222.199.50:3002/health` | Order & inventory management |
 
