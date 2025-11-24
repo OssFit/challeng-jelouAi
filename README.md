@@ -343,7 +343,17 @@ JWT_SECRET=your_production_secret_key
 
 ---
 
-## 📁 Project Structure
+## � FinOps & Infrastructure Lifecycle
+
+To ensure cost efficiency and security, the infrastructure includes an automated shutdown strategy:
+
+* **Resource TTL (Time-To-Live):** An **AWS EventBridge Schedule** has been configured to automatically invoke the `EC2:StopInstances` API action on **November 30th, 2025** (Adjust date as needed).
+* **Cost Management:** This ensures compute resources are not left running indefinitely post-evaluation, adhering to best cloud cost management practices (preventing bill shock).
+* **Serverless Efficiency:** The Lambda Orchestrator remains deployed as it follows a "Scale-to-Zero" model, incurring no costs when idle. It will be decommissioned via `serverless remove` after the review phase.
+
+---
+
+## �📁 Project Structure
 
 ```
 challeng-jelouAi/
