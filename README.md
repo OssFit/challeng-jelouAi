@@ -272,12 +272,10 @@ Use the included Postman collection or cURL examples in `/docs/api-examples.md`.
 
 2. **Install Docker & Docker Compose**
    ```bash
-  # 2. Install Docker & Docker Compose (Ubuntu)
-sudo apt-get update
-sudo apt-get install -y docker.io docker-compose
-sudo usermod -aG docker ubuntu
-# Log out and log back in for group changes to take effect
-```
+   sudo apt-get update
+   sudo apt-get install -y docker.io docker-compose
+   sudo usermod -aG docker ubuntu
+   # Log out and log back in for group changes to take effect
    
    # Install Docker Compose
    sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -430,6 +428,6 @@ Built with ❤️ as a technical challenge demonstrating:
 - Serverless orchestration
 - Clean architecture principles
 
-**Questions?** Open an issue or reach out via 
-https://github.com/Ossfit/challeng-jelouAi
-https://linkedin.com/in/oscar-alatrista.
+**Questions?** Open an issue or reach out:
+- **GitHub:** [github.com/Ossfit/challeng-jelouAi](https://github.com/Ossfit/challeng-jelouAi)
+- **LinkedIn:** [linkedin.com/in/oscar-alatrista](https://linkedin.com/in/oscar-alatrista)
